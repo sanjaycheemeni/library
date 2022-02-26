@@ -52,4 +52,16 @@ class Library:
             mb.showerror(f'DATABASE ERROR : {e}')
             return False
 
+    #get book details
+    def get_book(self,book_id):
+        query = f"SELECT * FROM BOOK WHERE book_id = {book_id}"
+        #print(query)
+        mycursor.execute(query)
+        rec =mycursor.fetchall()
+        if(len(rec) > 0):
+            return rec
+        else:
+            print(f'no results for {book_id}')
+            return None
+
 
