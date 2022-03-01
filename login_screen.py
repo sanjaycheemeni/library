@@ -4,12 +4,13 @@ from re import T
 from tkinter import *
 
 from mysqlx import Column
-from database import Library
+from library_database import LibraryDatabase
 
 
 ###on login done
 def loginSucces():
     #define the intent on login success!!!
+    print('done!')
     pass        
 
 
@@ -20,7 +21,7 @@ def loginSucces():
 #defining login function
 def login():
 
-    lib = Library('root','root','localhost','sanju')
+    lib = LibraryDatabase('lib.db')
     #getting form data
     uname=username.get()
     pwd=password.get()
@@ -28,10 +29,11 @@ def login():
     if uname=='' or pwd=='':
         message.set("fill the empty field!!!")
     else:
-      if lib.signin(uname,pwd):
-         loginSucces()
-      else:
-       message.set("Wrong username or password!!!")
+        if lib.login(uname,pwd):
+            message.set("success!!")
+            loginSucces()
+        else:
+             message.set("Wrong username or password!!!")
 
 
 def homescreen():
@@ -48,7 +50,7 @@ global login_screen
 login_screen = Tk()
 login_screen.configure(background="#2d2e2d")
 login_screen.title("LIBRARY MANAGER")
-login_screen.geometry("1000x500")
+login_screen.geometry("600x300")
 
 global  message
 global username
@@ -65,16 +67,16 @@ label.config(bg="#1b1c1c")
 #username
 t_uname = Label(login_screen, text="USERNAME",bg="#2d2e2d",fg="white")
 t_uname.config(font=("Product Sans", 10))
-t_uname.place(x=360,y=150)
-Entry(login_screen, textvariable=username,bg="white").place(x=450,y=152)
+t_uname.place(x=150,y=150)
+Entry(login_screen, textvariable=username,bg="white").place(x=240,y=152)
 #password
 t_pass = Label(login_screen, text="PASSWORD",bg="#2d2e2d",fg="white")
 t_pass.config(font=("Product Sans",10))
-t_pass.place(x=360,y=180)
-Entry(login_screen, textvariable=password ,show=".",bg="white").place(x=450,y=182)
+t_pass.place(x=150,y=180)
+Entry(login_screen, textvariable=password ,show=".",bg="white").place(x=240,y=182)
 #message
-Label(login_screen, text="",textvariable=message,bg="#2d2e2d",fg="red").place(x=455,y=210)
-Button(login_screen, text="LOGIN",font=("Product Sans",12), width=25, height=1, bg="white",fg="black",command=login).place(x=350,y=235)
+Label(login_screen, text="",textvariable=message,bg="#2d2e2d",fg="red").place(x=150,y=210)
+Button(login_screen, text="LOGIN",font=("Product Sans",12), width=10, height=1, bg="white",fg="black",command=login).place(x=210,y=235)
 
 ###########################
 login_screen.mainloop()

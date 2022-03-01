@@ -1,4 +1,5 @@
 import sqlite3 as sql
+from typing import List
 from warnings import catch_warnings
 from winreg import QueryInfoKey
 
@@ -9,9 +10,10 @@ class LibraryDatabase:
 
     def __init__(self,db):
         self.con = sql.connect('lib.db')
-        self.cur = self.con.cursor()
+        
 
     def login(self,user,passw):
+        self.cur = self.con.cursor()
         query = f"SELECT * FROM users WHERE uname = '{user}' and pass = '{passw}'"
         self.cur.execute(query)
         if self.cur.fetchone():
@@ -19,6 +21,7 @@ class LibraryDatabase:
         else:
             False
     def addbook(self,id,name,author,price,stock):
+        self.cur = self.con.cursor()
         query = f"INSERT INTO books VALUES('{id}','{name}','{author}','{price}','{stock}')"
         try:
             self.cur.execute(query)
@@ -29,6 +32,7 @@ class LibraryDatabase:
             print("Failed to insert data into sqlite table", error)
     
     def delbook(self,id):
+        self.cur = self.con.cursor()
         query = f"SELECT * FROM books WHERE id='{id}'"
         self.cur.execute(query)
         rows = self.cur.fetchall()
@@ -36,7 +40,7 @@ class LibraryDatabase:
         for row in rows:
             print(row)
 
-        query = f"DELETE FROM books WHERE id={id}"
+        query = f"DELETE FROM books WHERE id='{id}'"
         try:
             self.cur.execute(query)
             self.con.commit()
@@ -45,8 +49,30 @@ class LibraryDatabase:
 
         except sql.Error as error:
             print("Failed to delete data from sqlite table", error)
+    def bookList(self):
+        self.cur = self.con.cursor()
+        query = f"SELECT * FROM books"
+        self.cur.execute(query)
+        rows = self.cur.fetchall()
+        lis = []
+        for row in rows:
+            lis.append(row[1])
+        return lis
 
-lb = LibraryDatabase('sql.db')
-#lb.addbook('001','kayar','Thakayi sp','200','12')
-lb.delbook('001')
+    def searchBook(self,name):
+        self.cur = self.con.cursor()
+        query = f"SELECT * FROM books where name like '{name}%'"
+        self.cur.execute(query)
+        rows = self.cur.fetchall()
+        lis = []
+        for row in rows:
+            lis.append(row[1])
+        return lis
+            
+
+#lb = LibraryDatabase('sql.db')
+# lb.addbook('001','kayar','Thakayi sp','200','12')
+# lb.addbook('002','naalukettu','onv kurup','180','5')
+#lb.delbook('001')
+#print(lb.searchBook('k'))
 
