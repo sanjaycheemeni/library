@@ -1,3 +1,5 @@
+from lib2to3.pgen2.pgen import DFAState
+import re
 import sqlite3 as sql
 from typing import List
 from warnings import catch_warnings
@@ -61,13 +63,36 @@ class LibraryDatabase:
 
     def searchBook(self,name):
         self.cur = self.con.cursor()
-        query = f"SELECT * FROM books where name like '{name}%'"
+        query = f"SELECT * FROM books where name like '{name}%' or name like '%{name}%'"
         self.cur.execute(query)
         rows = self.cur.fetchall()
         lis = []
         for row in rows:
-            lis.append(row[1])
+            lis.append(f"{row[0]}  {row[1]}")
         return lis
+    
+    def getbook(self,id):
+        self.cur = self.con.cursor()
+        query = f"SELECT * FROM books where id='{id}'"
+        self.cur.execute(query)
+        rows = self.cur.fetchall()
+        #print(type(rows))
+        return rows
+
+    def updateBook(self,id,name,auth,stock):
+        query = f"UPDATE books SET name='{name}',author='{auth}',stock='{stock}' where id = '{id}'"
+        self.cur = self.con.cursor()
+        try:
+            self.cur.execute(query)
+            self.con.commit()
+            print('deleted !!')
+            self.cur.close()
+            return True
+
+        except sql.Error as error:
+            print("Failed to update data on sqlite table : ", error)
+            return False
+
             
 
 #lb = LibraryDatabase('sql.db')

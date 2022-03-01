@@ -1,17 +1,23 @@
 
 from imp import load_source
 from re import T
+from runpy import run_path
 from tkinter import *
 
 from mysqlx import Column
 from library_database import LibraryDatabase
+import menu_screen as ms
 
+global login_screen
+login_screen = Tk()
 
 ###on login done
-def loginSucces():
-    #define the intent on login success!!!
-    print('done!')
-    pass        
+def loginSucces():      
+    login_screen.destroy()
+    ms.runHome() 
+
+def runLogin():
+    login_screen.mainloop()
 
 
 
@@ -36,18 +42,17 @@ def login():
              message.set("Wrong username or password!!!")
 
 
-def homescreen():
-    login_screen.destroy()
-    home = Tk()
-    home.configure(background="blue")
-    home.geometry('400x400')
-    home.mainloop()
+# def homescreen():
+#     login_screen.destroy()
+#     home = Tk()
+#     home.configure(background="blue")
+#     home.geometry('400x400')
+#     home.mainloop()
 
 
 
 ##### LOGIN SCREEN #######
-global login_screen
-login_screen = Tk()
+
 login_screen.configure(background="#2d2e2d")
 login_screen.title("LIBRARY MANAGER")
 login_screen.geometry("600x300")
