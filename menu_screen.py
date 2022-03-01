@@ -7,7 +7,7 @@ from tkinter import *
 from tkinter import messagebox
 from turtle import home
 
-from mysqlx import Column
+#from mysqlx import Column
 from library_database import LibraryDatabase
 
 #########################################

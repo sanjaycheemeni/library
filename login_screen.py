@@ -4,9 +4,9 @@ from re import T
 from runpy import run_path
 from tkinter import *
 
-from mysqlx import Column
+#from mysqlx import Column
 from library_database import LibraryDatabase
-from menu_screen import runHome
+
 
 def runLogin():
     login_screen.mainloop()
@@ -19,7 +19,9 @@ login_screen = Tk()
 
 
 def loginSucces():
-    pass
+    login_screen.destroy()
+    import menu_screen
+    
     
 
 
