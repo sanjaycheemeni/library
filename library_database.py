@@ -1,6 +1,7 @@
 from lib2to3.pgen2.pgen import DFAState
 import re
 import sqlite3 as sql
+from tkinter import N
 from typing import List
 from warnings import catch_warnings
 from winreg import QueryInfoKey
@@ -22,16 +23,25 @@ class LibraryDatabase:
            return True
         else:
             False
-    def addbook(self,id,name,author,price,stock):
+    def addbook(self,id,name,author,stock):
         self.cur = self.con.cursor()
-        query = f"INSERT INTO books VALUES('{id}','{name}','{author}','{price}','{stock}')"
+        query = f"SELECT * FROM books WHERE id='{id}'"
+        print(query)
+        self.cur.execute(query)
+        if self.cur.fetchone():
+           return False
+
+
+        self.cur = self.con.cursor()
+        query = f"INSERT INTO books(name,author,stock) VALUES('{name}','{author}','{stock}')"
         try:
             self.cur.execute(query)
             self.con.commit()
-            print('DONE!!')
+            return True
 
         except sql.Error as error:
             print("Failed to insert data into sqlite table", error)
+            return False
     
     def delbook(self,id):
         self.cur = self.con.cursor()
@@ -48,9 +58,11 @@ class LibraryDatabase:
             self.con.commit()
             print('deleted !!')
             self.cur.close()
+            return True
 
         except sql.Error as error:
             print("Failed to delete data from sqlite table", error)
+            return False
     def bookList(self):
         self.cur = self.con.cursor()
         query = f"SELECT * FROM books"

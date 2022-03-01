@@ -6,21 +6,21 @@ from tkinter import *
 
 from mysqlx import Column
 from library_database import LibraryDatabase
-import menu_screen as ms
+from menu_screen import runHome
+
+def runLogin():
+    login_screen.mainloop()
+    
+
 
 global login_screen
 login_screen = Tk()
 
-###on login done
-def loginSucces():      
-    login_screen.destroy()
-    ms.runHome() 
-
-def runLogin():
-    login_screen.mainloop()
 
 
-
+def loginSucces():
+    pass
+    
 
 
 
@@ -84,4 +84,4 @@ Label(login_screen, text="",textvariable=message,bg="#2d2e2d",fg="red").place(x=
 Button(login_screen, text="LOGIN",font=("Product Sans",12), width=10, height=1, bg="white",fg="black",command=login).place(x=210,y=235)
 
 ###########################
-login_screen.mainloop()
+runLogin()
