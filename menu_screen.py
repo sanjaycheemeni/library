@@ -12,7 +12,7 @@ from library_database import LibraryDatabase
 
 #########################################
 l = LibraryDatabase('lib.db')
-global home_screen
+#global home_screen
 home_screen = Tk()
 
 bid = StringVar()
@@ -84,55 +84,56 @@ home_screen.title("LIBRARY MANAGER")
 home_screen.geometry("600x300")
 
 global search_key
+global vlist
 search_key = StringVar()
+vlist = StringVar(value=l.searchBook(search_key.get()))
 search_key.trace("w", lambda name, index,mode, var=search_key: callback(var))
+
+#=== [ view start ] ==========================================================================
+
+# === TITLE ===
 label = Label(home_screen,width="300", text='HOME')
 label.pack()
 
-
-
+# === SEARCH BAR ===
 search_t = Label(home_screen, text="Search ",bg="#2d2e2d",fg="white")
 search_t.config(font=("Product Sans", 10))
 search_t.place(x=8,y=25)
 Entry(home_screen, textvariable=search_key,bg="white").place(x=63,y=25)
 
-global vlist
-vlist = StringVar(value=l.searchBook(search_key.get()))
-print(search_key.get())
-
-#list of search by $search_key  ####LISTBOX
+# ===LISTBOX ===
 lisb = Listbox(home_screen,listvariable=vlist,width=30,height=10,selectmode='extended')
 lisb.place(x=8,y=50)
 lisb.bind("<<ListboxSelect>>", onSelect)
 
-
-# editable form
+# === FORM ===
 b_id_t = Label(home_screen, text="Book ID ",textvariable=bid,bg="#2d2e2d",fg="yellow")
 b_id_t.place(x=300,y=40)
 
-
+#book name
 b_name_t = Label(home_screen, text="Book name",bg="#2d2e2d",fg="white")
 b_name_t.place(x=300,y=65)
 Entry(home_screen,bg="white",textvariable=bname).place(x=300,y=85)
 
+#author name
 b_auth_t = Label(home_screen, text="Author name",bg="#2d2e2d",fg="white")
 b_auth_t.place(x=300,y=105)
 Entry(home_screen,bg="white",textvariable=bauth).place(x=300,y=125)
 
+#stock
 b_stock_t = Label(home_screen, text="Stock count",bg="#2d2e2d",fg="white")
 b_stock_t.place(x=300,y=145)
 Entry(home_screen,bg="white",textvariable=bstock).place(x=300,y=165)
 
-###
-#button
+#buttonset [ update delete add clear ]
 Button(home_screen, text="Update", width=10, height=1, bg="#7188f0",fg="black",command=updateBook).place(x=450,y=80)
-
 Button(home_screen, text="Delete", width=10, height=1, bg="#e64e4e",fg="black",command=deleteBook).place(x=450,y=110)
-
 Button(home_screen, text="Add", width=10, height=1, bg="#64d959",fg="black",command=addBook).place(x=450,y=160)
-
 Button(home_screen, text="Clear", width=8, height=1, bg="white",fg="red",command=clearFields).place(x=215,y=130)
 
-#########################################
+# ==== VIEW END =====================================================================
 
 
+
+
+home_screen.mainloop()

@@ -1,10 +1,11 @@
 from cmath import log
+#from curses import baudrate
 from re import T
 import re
 from signal import valid_signals
 from tkinter import *
 from tkinter import messagebox
-from turtle import home
+from turtle import back, home
 from unicodedata import bidirectional
 
 from mysqlx import Column
@@ -19,35 +20,30 @@ global username
 global password
 global bid,bname,bauth,bstock
 
-search_key = StringVar()
-username = StringVar()
-password = StringVar()
-message=StringVar()
-
 l = LibraryDatabase('lib.db')
 
 #=== [ EVENT LIST ] ==============================
 
 #---Login Success
 def loginSucces():
-    pass
+    HomeScreen()
 
-#---Login 
-def login():
+#-- login attmpt
+def login(un,ps,ms):
 
     lib = LibraryDatabase('lib.db')
     #getting form data
-    uname=username.get()
-    pwd=password.get()
+    uname=un
+    pwd=ps
     #applying empty validation
     if uname=='' or pwd=='':
-        message.set("fill the empty field!!!")
+        ms.set("fill the empty field!!!")
     else:
         if lib.login(uname,pwd):
-            message.set("success!!")
+            ms.set("success!!")
             loginSucces()
         else:
-             message.set("Wrong username or password!!!")
+            ms.set("Wrong username or password!!!")
 
 
 #---on search-------
@@ -111,8 +107,8 @@ class HomeScreen:
         home_screen.title("LIBRARY MANAGER")
         home_screen.geometry("600x300")
         
-        
-        
+        bid=bname=bauth=bstock=StringVar()
+        search_key = StringVar()
         vlist = StringVar(value=l.searchBook(search_key.get()))
         search_key.trace("w", lambda name, index,mode, var=search_key: callback(var))
 
@@ -159,11 +155,16 @@ class HomeScreen:
         Button(home_screen, text="Clear", width=8, height=1, bg="white",fg="red",command=clearFields).place(x=215,y=130)
 
         #=== [ HOME SCREEN END ]===
+        home_screen.mainloop()
+
+    
+
 
 # ============[ LOGIN SCREEN ]=======================
 class LoginScreen():
     def __init__(self):
         login_screen = Tk()
+        #super().__init__(self)
         login_screen.configure(background="#2d2e2d")
         login_screen.title("LIBRARY MANAGER")
         login_screen.geometry("600x300")
@@ -173,25 +174,26 @@ class LoginScreen():
         label.config(fg="white")
         label.config(bg="#1b1c1c")
 
+        username = StringVar()
+        password = StringVar()
+        message=StringVar()
         #--- username input field ---
         t_uname = Label(login_screen, text="USERNAME",bg="#2d2e2d",fg="white")
         t_uname.config(font=("Product Sans", 10))
-        t_uname.place(x=150,y=150)
-        Entry(login_screen, textvariable=username,bg="white").place(x=240,y=152)
+        t_uname.place(x=150,y=120)
+        Entry(login_screen, textvariable=username,bg="white").place(x=240,y=122)
         
         #--- pass word input field ---
         t_pass = Label(login_screen, text="PASSWORD",bg="#2d2e2d",fg="white")
         t_pass.config(font=("Product Sans",10))
-        t_pass.place(x=150,y=180)
-        Entry(login_screen, textvariable=password ,show=".",bg="white").place(x=240,y=182)
+        t_pass.place(x=150,y=150)
+        Entry(login_screen, textvariable=password ,show=".",bg="white").place(x=240,y=152)
         
         #--- message text ----
-        Label(login_screen, text="",textvariable=message,bg="#2d2e2d",fg="red").place(x=150,y=210)
+        Label(login_screen, text="",textvariable=message,bg="#2d2e2d",fg="red").place(x=150,y=180)
         
         #--- login button ---
-        Button(login_screen, text="LOGIN",font=("Product Sans",12), width=10, height=1, bg="white",fg="black",command=login).place(x=210,y=235)
-        
-        #--- run
+        Button(login_screen, text="LOGIN",font=("Product Sans",12), width=10, height=1, bg="white",fg="black",command=login(username.get(),password.get(),message)).place(x=210,y=205)
+
         login_screen.mainloop()
 
-l =LoginScreen()
